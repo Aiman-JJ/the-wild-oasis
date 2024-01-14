@@ -27,23 +27,6 @@ function CreateCabinForm() {
   function onError(errors) {
     console.log(errors);
   }
-
-  // function submit(data) {
-  //   console.log("Form data:");
-  //   console.log(data);
-  //   // Check if 'image' is an array and has at least one element
-  //   const imageData =
-  //     Array.isArray(data.image) && data.image.length > 0 ? data.image[0] : null;
-
-  //   // If 'imageData' is not null, update the 'image' property in 'data'
-  //   if (imageData) {
-  //     mutate({ ...data, image: imageData });
-  //   } else {
-  //     // Handle the case where 'imageData' is null (optional based on your requirements)
-  //     console.error("No image data found in form submission");
-  //   }
-  // }
-
   function submit(data) {
     mutate({ ...data, image: data.image[0] });
   }

@@ -8,21 +8,32 @@ export function useCheckin() {
   const navigate = useNavigate();
 
   const { mutate: checkin, isLoading: isCheckingIn } = useMutation({
-    mutationFn: ({bookingId, breakfast}) =>
-      updateBooking(bookingId, {
-        status: "checked-in",
-        isPaid: true,
-        ...breakfast
-      }),
+    mutationFn: async ({ bookingId, breakfast }) => {
+      try {
+        const data = await updateBooking(bookingId, {
+          status: "checked-in",
+          isPaid: true,
+          ...breakfast,
+        });
+
+        return data;
+      } catch (error) {
+        throw new Error("Error updating booking");
+      }
+    },
     onSuccess: (data) => {
-      console.log(data, 17)
-      toast.success(`Booking #${data[0].id} successfully checked in`);
+      if (data && data.id) {
+        toast.success(`Booking #${data.id} successfully checked in`);
+      } else {
+        console.error("Invalid data structure after check-in:", data);
+        toast.error("There was an error checking in");
+      }
+
       queryClient.invalidateQueries({ active: true });
       navigate("/");
     },
     onError: () => toast.error("There was an error checking in"),
   });
+
   return { checkin, isCheckingIn };
 }
-
-
